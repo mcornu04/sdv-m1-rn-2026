@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export type TodoStatus = "a faire" | "Fait";
 
@@ -10,6 +10,7 @@ export type TodoCardProps = {
   subtitleOpacity?: number;
   titleItalic?: boolean;
   titleLineThrough?: boolean;
+  onPress?: () => void;
 };
 
 export function TodoCard({
@@ -19,6 +20,7 @@ export function TodoCard({
   subtitleOpacity = 1,
   titleItalic = false,
   titleLineThrough = false,
+  onPress,
 }: TodoCardProps) {
   const isDone = subtitle === "Fait";
   const isTodo = subtitle === "a faire";
@@ -31,7 +33,7 @@ export function TodoCard({
     : titleOpacity;
 
   return (
-    <View style={styles.card}>
+    <Pressable style={styles.card} onPress={onPress}>
       <Text
         style={[
           styles.title,
@@ -55,7 +57,7 @@ export function TodoCard({
           {subtitle}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 
 import { TodoCard, type TodoCardProps } from "@/components/todo-card";
 
-const todos: TodoCardProps[] = [
+const initialTodos: TodoCardProps[] = [
   {
     title: "Apprendre React Native",
     subtitle: "Fait",
@@ -34,12 +34,32 @@ const todos: TodoCardProps[] = [
 ];
 
 export default function HomeScreen() {
+  const [todos, setTodos] = React.useState(initialTodos);
+
+  const toggleTodoStatus = (index: number) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo, todoIndex) =>
+        todoIndex === index
+          ? (() => {
+              const nextIsDone = todo.subtitle === "a faire";
+
+              return {
+                ...todo,
+                subtitle: nextIsDone ? "Fait" : "a faire",
+                titleLineThrough: nextIsDone,
+                titleItalic: nextIsDone,
+              };
+            })()
+          : todo,
+      ),
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.list}>
-        {todos.map((todo) => (
-          // eslint-disable-next-line react/jsx-key
-          <View>
+        {todos.map((todo, index) => (
+          <React.Fragment key={`${todo.title}-${index}`}>
             <TodoCard
               title={todo.title}
               subtitle={todo.subtitle}
@@ -47,8 +67,9 @@ export default function HomeScreen() {
               subtitleOpacity={todo.subtitleOpacity}
               titleItalic={todo.titleItalic}
               titleLineThrough={todo.titleLineThrough}
+              onPress={() => toggleTodoStatus(index)}
             />
-          </View>
+          </React.Fragment>
         ))}
       </View>
     </View>
